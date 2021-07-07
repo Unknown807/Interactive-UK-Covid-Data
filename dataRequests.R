@@ -65,14 +65,11 @@ getCountries <- function () {
 }
 
 getAuthorities <- function() {
-  area_type = "utla"
+  area_type = "ltla"
   csv_file_name = "resources\\authorities.csv"
   getData(area_type, csv_file_name)
 }
 
+
 # getCountries()
 # getAuthorities()
-# 
-# df <- read.csv("resources\\authorities.csv")
-# df <- select(df, !X) # To remove saved X column from data frame
-# df
