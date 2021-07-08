@@ -16,8 +16,6 @@ server <- function(input, output, session) {
   
   output$authorityPlot <- renderPlot({
     
-    x_data <- covid_income_data$net_income
-    
     if (input$authorityDataRadioType == "1") {
       y_data <- covid_income_data$cumulativeCases
       y_lab <- "Cumulative Cases"
@@ -27,8 +25,8 @@ server <- function(input, output, session) {
     }
     
     ggplot(data=covid_income_data, 
-           aes(y=y_data,
-               x=x_data,
+           aes(x=net_income,
+               y=y_data,
                colour=y_data)) +
       geom_point(size=3) +
       scale_colour_gradient(name=y_lab, low="#F6BDC0", high="#CD0002") +
@@ -38,19 +36,30 @@ server <- function(input, output, session) {
       theme_bw()
   })
   
-  # output$regionPlot <- renderPlot({
-  #   ggplot(data=covid_income_data,
-  #          aes(y=cumulativeCases,
-  #              x=net_income,
-  #              colour=cumulativeCases)) +
-  #     geom_point(size=3) +
-  #     scale_colour_gradient(name="Cumulative Cases", low="#F6BDC0", high="#CD0002") +
-  #     ggtitle("Scatter plot of Average Net Income of Local Authorities and their Cumulative Covid Cases") +
-  #     xlab("Average Net Income") +
-  #     ylab("Cumulative Cases") +
-  #     theme_bw()
-  # })
-  
+  output$regionPlot <- renderPlot({
+    
+    data_to_use <- region_covid_data %>%
+      filter(name == input$regionSelect)
+    
+    if (input$regionDataRadioType == "1") {
+      y_data <- data_to_use$cumulativeCases
+      y_lab <- "Cumulative Cases"
+    } else {
+      y_data <- data_to_use$cumulativeDeaths
+      y_lab <- "Cumulative Deaths"
+    }
+    
+    ggplot(data=data_to_use,
+           aes(x=date,
+               y=y_data)) +
+      geom_line(color="red", size=2) +
+      scale_colour_gradient(name=y_lab, low="#F6BDC0", high="#CD0002") +
+      ggtitle(paste("Line chart of", y_lab,"in",input$regionSelect)) +
+      xlab("Date") +
+      ylab(y_lab) +
+      scale_x_date(date_labels = "%Y-%m-%d") +
+      theme_bw()
+  })
 }
 
 # Reading test data and plotting it onto shape file ----

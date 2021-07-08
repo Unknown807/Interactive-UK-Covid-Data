@@ -22,7 +22,8 @@ income_data <- rename(income_data,
                       name=Local.authority.name,
                       net_income=Net.annual.income)
 
-income_data$net_income <- as.numeric(gsub(",", "", income_data$net_income))
+income_data <- income_data %>%
+  mutate(net_income=as.numeric(gsub(",", "", net_income)))
 
 income_data <- aggregate(net_income ~ name,
                          data=income_data,
@@ -31,8 +32,7 @@ income_data <- aggregate(net_income ~ name,
 # Get covid data for regions
 region_covid_data <- read.csv("resources\\regions.csv") %>%
   select(date, name, cumulativeCases, cumulativeDeaths) %>%
-  rename("Cumulative Cases"=cumulativeCases,
-         "Cumulative Deaths"=cumulativeDeaths)
+  mutate(date=as.Date(date))
 
 # Reading shape file, covid data and joining the data frames
 shp <- st_read("resources\\Local_Authority_Districts_(December_2020)_UK_BUC.shp", stringsAsFactors=FALSE) %>%
@@ -53,10 +53,9 @@ covid_income_data <- inner_join(
             data=covid_data,
             max),
   income_data) %>%
-  select(-c(dailyCases, dailyDeaths))
-
-covid_income_data$cumulativeCases = as.numeric(covid_income_data$cumulativeCases)
-covid_income_data$cumulativeDeaths = as.numeric(covid_income_data$cumulativeDeaths)
+  select(-c(dailyCases, dailyDeaths)) %>%
+  mutate(cumulativeCases=as.numeric(cumulativeCases),
+         cumulativeDeaths=as.numeric(cumulativeDeaths))
 
 # Get dates for the dataSlider's range
 max_date = as.Date(max(covid_map_data$date))

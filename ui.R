@@ -43,11 +43,11 @@ ui <- navbarPage(title="UK Covid Data Visualised",
                                   selected=1),
                       selectInput("regionSelect",
                                   h5("Regions"),
-                                  choices = list("England"=1, 
-                                                 "Scotland"=2, 
-                                                 "Wales"=3, 
-                                                 "Northern Ireland"=4),
-                                  selected=1)
+                                  choices = list("England", 
+                                                 "Scotland", 
+                                                 "Wales", 
+                                                 "Northern Ireland"),
+                                  selected="England")
                     )
              ),
              column(9,
