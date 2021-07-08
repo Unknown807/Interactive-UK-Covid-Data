@@ -30,8 +30,8 @@ ui <- navbarPage(title="UK Covid Data Visualised",
              column(3,
                     wellPanel(
                       h4("Configurations"),
-                      radioButtons("areaDataRadioType",
-                                   h5("Area Options"),
+                      radioButtons("authorityDataRadioType",
+                                   h5("Authorities"),
                                    choices = list("Cumulative Cases"=1,
                                                   "Cumulative Deaths"=2),
                                    selected=1),
@@ -51,7 +51,13 @@ ui <- navbarPage(title="UK Covid Data Visualised",
                     )
              ),
              column(9,
-                    plotOutput("gridPlot")
+                    fluidRow(
+                      plotOutput("authorityPlot")
+                    ),
+                    fluidRow(
+                      plotOutput("regionPlot")
+                    )
+                    
              )
            )
   ),

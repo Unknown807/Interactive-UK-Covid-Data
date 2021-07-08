@@ -1,5 +1,7 @@
 library(shiny)
 library(leaflet)
+
+library(ggplot2)
 library(tidyverse)
 library(sf)
 library(tmap)
@@ -8,7 +10,7 @@ library(tmaptools)
 tmap_options(check.and.fix = TRUE)
 tmap_mode("view")
 
-# Get net annual income for MSOA in England and Wales and aggregate to get mean for the Local Authorities
+# Get net annual income for MSOA in England and Wales and aggregate to get mean for local authorities
 income_data <- read.csv("resources\\netannualincome2018.csv") %>%
   mutate(Net.annual.income = replace_na(
     Net.annual.income, mean(
@@ -16,9 +18,13 @@ income_data <- read.csv("resources\\netannualincome2018.csv") %>%
       )
     ))
 
-income_data$Net.annual.income <- as.numeric(gsub(",", "", income_data$Net.annual.income))
+income_data <- rename(income_data, 
+                      name=Local.authority.name,
+                      net_income=Net.annual.income)
 
-income_data <- aggregate(Net.annual.income ~ Local.authority.name,
+income_data$net_income <- as.numeric(gsub(",", "", income_data$net_income))
+
+income_data <- aggregate(net_income ~ name,
                          data=income_data,
                          function(x) { round(mean(x)) } )
 
@@ -32,14 +38,25 @@ region_covid_data <- read.csv("resources\\regions.csv") %>%
 shp <- st_read("resources\\Local_Authority_Districts_(December_2020)_UK_BUC.shp", stringsAsFactors=FALSE) %>%
   rename(name=LAD20NM)
 
-covid_data <- read.csv("resources\\authorities.csv")
+covid_data <- read.csv("resources\\authorities.csv") %>%
+  select(-c(X, code))
 
 covid_map_data <- inner_join(shp, covid_data) %>%
   select(-c(OBJECTID, LAD20CD,
-            code, dailyDeaths,
-            X, LAD20NMW)) %>%
+            dailyDeaths, LAD20NMW)) %>%
   rename("Daily Cases"=dailyCases,
          "Cumulative Deaths"=cumulativeDeaths)
+
+# Join the income_data onto the covid data for local authorities
+covid_income_data <- inner_join(
+  aggregate(. ~ name,
+            data=covid_data,
+            max),
+  income_data) %>%
+  select(-c(dailyCases, dailyDeaths))
+
+covid_income_data$cumulativeCases = as.numeric(covid_income_data$cumulativeCases)
+covid_income_data$cumulativeDeaths = as.numeric(covid_income_data$cumulativeDeaths)
 
 # Get dates for the dataSlider's range
 max_date = as.Date(max(covid_map_data$date))
