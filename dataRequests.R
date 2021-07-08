@@ -58,9 +58,9 @@ getData <- function(area_type, csv_file_name) {
   
 }
 
-getCountries <- function () {
+getRegions <- function () {
   area_type = "nation"
-  csv_file_name = "resources\\countries.csv"
+  csv_file_name = "resources\\regions.csv"
   getData(area_type, csv_file_name)
 }
 
@@ -71,5 +71,5 @@ getAuthorities <- function() {
 }
 
 
-# getCountries()
-getAuthorities()
+# getRegions()
+# getAuthorities()

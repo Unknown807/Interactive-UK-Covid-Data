@@ -1,16 +1,21 @@
 
 
 server <- function(input, output, session) {
+  
   output$ukMapPlot <- renderLeaflet({
     
-    data_to_use <- int_map_data %>%
+    data_to_use <- covid_map_data %>%
       filter(date == input$dateSlider)
     
     data_column <- c("Daily Cases", "Cumulative Deaths")[as.numeric(input$dataRadioType)]
     
-    int_map <- tm_shape(data_to_use) +
+    covid_map <- tm_shape(data_to_use) +
       tm_polygons(data_column, id="name", palette="Reds")
-    tmap_leaflet(int_map)
+    tmap_leaflet(covid_map)
+  })
+  
+  output$gridPlot <- renderPlot({
+    hist(rnorm(100))
   })
   
 }

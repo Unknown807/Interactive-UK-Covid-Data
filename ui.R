@@ -1,11 +1,10 @@
 
 ui <- navbarPage(title="UK Covid Data Visualised",
   tabPanel(title="Maps",
-           tags$head(includeCSS("styles\\styles.css")),
            fluidRow(
              column(3,
                     wellPanel(
-                      h4("Options"),
+                      h4("Configurations"),
                       radioButtons("dataRadioType",
                                    h5("Data"),
                                    choices = list("Daily Cases"=1,
@@ -22,14 +21,43 @@ ui <- navbarPage(title="UK Covid Data Visualised",
                     ),
              ),
              column(9,
-                    leafletOutput("ukMapPlot", height="600px")
+                    leafletOutput("ukMapPlot")
              )
            ),
   ),
-  tabPanel(title="Other Option 1"
+  tabPanel(title="Comparisons",
+           fluidRow(
+             column(3,
+                    wellPanel(
+                      h4("Configurations"),
+                      radioButtons("areaDataRadioType",
+                                   h5("Area Options"),
+                                   choices = list("Cumulative Cases"=1,
+                                                  "Cumulative Deaths"=2),
+                                   selected=1),
+                      hr(),
+                      radioButtons("regionDataRadioType",
+                                  h5("Region Options"),
+                                  choices = list("Cumulative Cases"=1,
+                                                 "Cumulative Deaths"=2),
+                                  selected=1),
+                      selectInput("regionSelect",
+                                  h5("Regions"),
+                                  choices = list("England"=1, 
+                                                 "Scotland"=2, 
+                                                 "Wales"=3, 
+                                                 "Northern Ireland"=4),
+                                  selected=1)
+                    )
+             ),
+             column(9,
+                    plotOutput("gridPlot")
+             )
+           )
   ),
   tabPanel(title="Other Option 2",
   ),
   tabPanel(title="About",
-  )
+  ),
+  tags$head(includeCSS("styles\\styles.css"))
 )
