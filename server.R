@@ -51,8 +51,9 @@ server <- function(input, output, session) {
     
     ggplot(data=data_to_use,
            aes(x=date,
-               y=y_data)) +
-      geom_line(color="red", size=2) +
+               y=y_data,
+               colour=y_data)) +
+      geom_line(size=2) +
       scale_colour_gradient(name=y_lab, low="#F6BDC0", high="#CD0002") +
       ggtitle(paste("Line chart of", y_lab,"in",input$regionSelect)) +
       xlab("Date") +
