@@ -1,23 +1,16 @@
 
-tmap_options(check.and.fix = TRUE)
-tmap_mode("view")
-
-shp <- st_read("resources\\Local_Authority_Districts_(December_2020)_UK_BUC.shp", stringsAsFactors=FALSE)
-shp <- rename(shp, name=LAD20NM)
-
-data <- read.csv("resources\\authorities.csv") %>%
-  filter(date == max(date)) %>%
-  mutate(dailyCases = replace_na(dailyCases, 0)) %>%
-  select(!X)
-
-shp <- inner_join(shp, data)
 
 server <- function(input, output, session) {
-  
   output$ukMapPlot <- renderLeaflet({
-    map1 <- tm_shape(shp) +
-      tm_polygons("dailyCases", id="name", palette="Reds")
-    tmap_leaflet(map1)
+    
+    data_to_use <- int_map_data %>%
+      filter(date == input$dateSlider)
+    
+    data_column <- c("Daily Cases", "Cumulative Deaths")[as.numeric(input$dataRadioType)]
+    
+    int_map <- tm_shape(data_to_use) +
+      tm_polygons(data_column, id="name", palette="Reds")
+    tmap_leaflet(int_map)
   })
   
 }

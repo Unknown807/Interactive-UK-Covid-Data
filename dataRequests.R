@@ -54,7 +54,7 @@ getData <- function(area_type, csv_file_name) {
     current_page_num <- current_page_num + 1
   }
   
-  write.csv(allData, csv_file_name, row.names = TRUE)
+  write.csv(allData, csv_file_name, na="0", row.names = TRUE)
   
 }
 
@@ -72,4 +72,4 @@ getAuthorities <- function() {
 
 
 # getCountries()
-# getAuthorities()
+getAuthorities()
