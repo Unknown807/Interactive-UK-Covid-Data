@@ -1,10 +1,9 @@
 library(shiny)
-
-library(ggplot2)
+library(leaflet)
 library(tidyverse)
-library(rgeos)
-library(rgdal)
-library(maptools)
+library(sf)
+library(tmap)
+library(tmaptools)
 
 source("ui.R")
 source("server.R")

@@ -1,31 +1,25 @@
 
-library(ggplot2)
-library(tidyverse)
-library(rgeos)
-library(rgdal)
-library(maptools)
+tmap_options(check.and.fix = TRUE)
+tmap_mode("view")
 
-shp <- readOGR("resources/Local_Authority_Districts_(December_2020)_UK_BUC.shp")
-shp <- fortify(shp, region="LAD20CD")
+shp <- st_read("resources\\Local_Authority_Districts_(December_2020)_UK_BUC.shp", stringsAsFactors=FALSE)
+shp <- rename(shp, name=LAD20NM)
 
-data <- read.csv("resources/authorities.csv") %>% 
-  filter(date==Sys.Date()) %>%
-  mutate(dailyCases = replace_na(dailyCases, 1)) %>%
+data <- read.csv("resources\\authorities.csv") %>%
+  filter(date == max(date)) %>%
+  mutate(dailyCases = replace_na(dailyCases, 0)) %>%
   select(!X)
 
-shp <- merge(shp, data, by.x="id", by.y="code", all.x=TRUE)
-shp <- arrange(shp, order)
+shp <- inner_join(shp, data)
 
 server <- function(input, output, session) {
-  output$ukMapPlot <- renderPlot({
-    map1 <- ggplot(shp, aes(x=long, y=lat, group=group)) +
-      geom_polygon(aes(fill=dailyCases), color="black") +
-      coord_equal() +
-      scale_fill_gradient(low="#CAF7DC", high="red")
-    map1
-  }, height=function() {
-    session$clientData$output_ukMapPlot_width
+  
+  output$ukMapPlot <- renderLeaflet({
+    map1 <- tm_shape(shp) +
+      tm_polygons("dailyCases", id="name", palette="Reds")
+    tmap_leaflet(map1)
   })
+  
 }
 
 # Reading test data and plotting it onto shape file ----

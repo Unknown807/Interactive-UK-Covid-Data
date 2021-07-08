@@ -1,6 +1,7 @@
 
 ui <- navbarPage(title="UK Covid Data Visualised",
   tabPanel(title="Maps",
+           tags$head(includeCSS("styles\\styles.css")),
            fluidRow(
              column(3,
                     wellPanel(
@@ -18,7 +19,7 @@ ui <- navbarPage(title="UK Covid Data Visualised",
                     ),
              ),
              column(9,
-                    plotOutput("ukMapPlot", height="auto")
+                    leafletOutput("ukMapPlot", height="600px")
              )
            ),
   ),
