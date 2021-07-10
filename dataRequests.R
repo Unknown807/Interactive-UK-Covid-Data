@@ -1,3 +1,5 @@
+# This script is meant to request and format the data from the UK government's covid API for both regions and local
+# authorities. If you were hosting this on a server this should be run once per day to get the latest results
 
 library(httr)
 library(jsonlite)
