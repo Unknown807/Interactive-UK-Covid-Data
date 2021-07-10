@@ -1,5 +1,7 @@
 # Interactive-UK-Covid-Data
 
+Check it out on <a href="https://unknown807.shinyapps.io/covidrproj/">Shiny Apps</a>. Data currently being used is demo data and will only go up to the 09/07/2021.
+
 ## Description
 
 This project uses R and the UK Government's <a href="https://coronavirus.data.gov.uk/details/developers-guide">Covid API</a> to create an interactive map showing daily cases and cumulative deaths across all of  the local authorities in the UK. Additionally showing a few charts which compare and visualise data in different ways. For example, comparing the cumulative deaths to net household income (since 2018) for each local authority.
