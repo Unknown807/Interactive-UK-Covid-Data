@@ -70,6 +70,15 @@ ui <- navbarPage(title="UK Covid Data Visualised",
            )
   ),
   tabPanel(title="About",
+           fluidRow(
+             column(12,
+                    h3("Visualising Covid Data Using R - By Milovan Gveric"),
+                    h4("My first data science project where I aimed to use data 
+                    that was currently relevant and visualise it in a few interesting
+                    ways. The source code for the project can be seen ",
+                    tags$a(href="https://github.com/Unknown807/", "here"))
+             )
+           )
   ),
   tags$head(includeCSS("styles\\styles.css"))
 )
