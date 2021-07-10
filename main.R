@@ -1,6 +1,7 @@
 library(shiny)
 library(leaflet)
 
+library(scales)
 library(ggplot2)
 library(tidyverse)
 library(sf)
@@ -39,7 +40,8 @@ shp <- st_read("resources\\Local_Authority_Districts_(December_2020)_UK_BUC.shp"
   rename(name=LAD20NM)
 
 covid_data <- read.csv("resources\\authorities.csv") %>%
-  select(-c(X, code))
+  select(-X) %>%
+  mutate(date=as.Date(date))
 
 covid_map_data <- inner_join(shp, covid_data) %>%
   select(-c(OBJECTID, LAD20CD,
@@ -58,8 +60,12 @@ covid_income_data <- inner_join(
          cumulativeDeaths=as.numeric(cumulativeDeaths))
 
 # Get dates for the dataSlider's range
-max_date = as.Date(max(covid_map_data$date))
-min_date = as.Date(min(covid_map_data$date))
+max_date = max(covid_map_data$date)
+min_date = min(covid_map_data$date)
+
+# Create choices list for authoritySelect
+
+authoritiesList = covid_income_data$name
 
 # Run shiny application
 source("ui.R")

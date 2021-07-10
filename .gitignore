@@ -40,4 +40,5 @@ vignettes/*.pdf
 
 # Resources
 
-resources/
+resources/authorities.csv
+resources/regions.csv

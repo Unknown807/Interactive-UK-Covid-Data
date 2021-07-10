@@ -8,7 +8,6 @@ ENDPOINT <- "https://api.coronavirus.data.gov.uk/v1/data"
 structure <- list(
   date  = "date", 
   name  = "areaName",
-  code = "areaCode",
   dailyCases = "newCasesByPublishDate",
   cumulativeCases = "cumCasesByPublishDate",
   dailyDeaths = "newDeaths28DaysByPublishDate",
@@ -71,5 +70,5 @@ getAuthorities <- function() {
 }
 
 
-# getRegions()
-# getAuthorities()
+getRegions()
+getAuthorities()

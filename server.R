@@ -14,7 +14,7 @@ server <- function(input, output, session) {
     tmap_leaflet(covid_map)
   })
   
-  output$authorityPlot <- renderPlot({
+  output$authorityScatterPlot <- renderPlot({
     
     if (input$authorityDataRadioType == "1") {
       y_data <- covid_income_data$cumulativeCases
@@ -36,8 +36,27 @@ server <- function(input, output, session) {
       theme_bw()
   })
   
-  output$regionPlot <- renderPlot({
+  output$authorityLinePlot <- renderPlot({
     
+    data_to_use <- covid_data %>%
+      filter(name == input$authoritySelect)
+    
+    ggplot(data=data_to_use,
+           aes(x=date,
+               y=dailyCases,
+               colour=dailyCases)) +
+      geom_point() +
+      geom_line() +
+      scale_colour_gradient(name="Daily Cases", low="#F6BDC0", high="#CD0002") +
+      ggtitle(paste("Line chart of Daily Cases in", input$authoritySelect)) +
+      xlab("Date") +
+      ylab("Daily Cases") +
+      scale_x_date(date_labels = "%Y-%m-%d") +
+      theme_bw()
+  })
+  
+  output$regionPlot <- renderPlot({
+  
     data_to_use <- region_covid_data %>%
       filter(name == input$regionSelect)
     
@@ -48,17 +67,18 @@ server <- function(input, output, session) {
       y_data <- data_to_use$cumulativeDeaths
       y_lab <- "Cumulative Deaths"
     }
-    
+      
     ggplot(data=data_to_use,
            aes(x=date,
                y=y_data,
                colour=y_data)) +
       geom_line(size=2) +
-      scale_colour_gradient(name=y_lab, low="#F6BDC0", high="#CD0002") +
+      scale_colour_gradient(name=y_lab, low="#F6BDC0", high="#CD0002", labels=comma) +
       ggtitle(paste("Line chart of", y_lab,"in",input$regionSelect)) +
       xlab("Date") +
       ylab(y_lab) +
       scale_x_date(date_labels = "%Y-%m-%d") +
+      scale_y_continuous(labels = comma) + 
       theme_bw()
   })
 }
